@@ -1,0 +1,8 @@
+{
+  "name": "nikola",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "description": "AWS Lambda for handling AWS IoT Button presses to make Tesla vehicles do stuff.",
+  "dependencies": {}
+}

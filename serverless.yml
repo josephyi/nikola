@@ -1,0 +1,29 @@
+service: nikola
+
+frameworkVersion: ">=1.4.0 <2.0.0"
+package:
+  exclude:
+    - .git/**
+    - package.json
+
+custom:
+  stage: ${opt:stage, self:provider.stage}
+  region: ${opt:region, 'us-west-2'}
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ${self:custom.region}
+  memorySize: 128
+  timeout: 60
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - iot:*
+      Resource: "*"
+
+functions:
+  nikola:
+    handler: index.handler
+    events: ${file(env.yml):${self:custom.stage}.iotevent}
+    environment: ${file(env.yml):${self:custom.stage}.variables}

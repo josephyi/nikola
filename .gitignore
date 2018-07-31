@@ -1,0 +1,4 @@
+env.yml
+node_modules
+.serverless
+*.log
