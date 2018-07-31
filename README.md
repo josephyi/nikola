@@ -1,4 +1,4 @@
-# Nikola
+# Nikola &middot;  [![Maintainability](https://api.codeclimate.com/v1/badges/5539867dfccc0e7c3887/maintainability)](https://codeclimate.com/github/josephyi/nikola/maintainability)
 AWS Lambda that handles click events from Amazon's [AWS IoT Button](https://www.amazon.com/dp/B01KW6YCIM), a customizable version of their dash button, to send commands to a Tesla vehicle.
 Watch a demo of the charging port and trunk being opened from a single click on my [Instagram](https://www.instagram.com/p/Bl2Mbp2Frzn/?utm_source=ig_web_copy_link) or [YouTube](https://www.youtube.com/watch?v=BGvC3H8xX88).
 
