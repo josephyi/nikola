@@ -16,38 +16,49 @@ exports.handler = async (event, context, callback) => {
 
     // wake up vehicle
     if (vehicle.response.state === 'asleep') {
-      await client.wakeup();
-      await pause(10000); 
-      let awake = false;
-      do {
-        await pause(1000);
-        const updatedVehicle = await client.vehicle();
-        awake = updatedVehicle.response.state === 'online';
-      } while (!awake);
+      await wakeupVehicle(client);
     }
 
-    if (event.clickType === singleClick) {
-      await client.flashLights();
-      await pause(1000);
-      await Promise.all([client.chargePortDoorOpen(), client.actuateTrunk('rear')]);
-      await pause(1000);
-      await client.flashLights();
-    }
+    await handleClick(event.clickType, client);
 
-    if (event.clickType === doubleClick) {
-      await client.flashLights();
-      await pause(1000);
-      await client.doorUnlock();
-      await pause(1000);
-      await client.flashLights();
-    }
-    const logout = await client.logout();
+    await client.logout();
   } catch (error) {
     console.log(error);
   }
 };
 
-const pause = milliseconds => {new Promise(resolve => setTimeout(resolve, milliseconds))}; 
+const handleClick = async (clickType, client) => {
+  if (clickType === singleClick) {
+    await client.flashLights();
+    await pause(1000);
+    await Promise.all([client.chargePortDoorOpen(), client.actuateTrunk('rear')]);
+    await pause(1000);
+    await client.flashLights();
+  }
+
+  if (clickType === doubleClick) {
+    await client.flashLights();
+    await pause(1000);
+    await client.doorUnlock();
+    await pause(1000);
+    await client.flashLights();
+  }
+};
+
+const wakeupVehicle = async client => {
+  await client.wakeup();
+  await pause(10000);
+  let awake = false;
+  do {
+    await pause(1000);
+    const updatedVehicle = await client.vehicle();
+    awake = updatedVehicle.response.state === 'online';
+  } while (!awake);
+};
+
+const pause = milliseconds => {
+  new Promise(resolve => setTimeout(resolve, milliseconds))
+};
 
 const createTeslaClient = async (email, password, vehicleId) => {
   const {
