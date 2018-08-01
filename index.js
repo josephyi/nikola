@@ -29,16 +29,12 @@ exports.handler = async (event, context, callback) => {
 
 const handleClick = async (clickType, client) => {
   if (clickType === singleClick) {
-    await client.flashLights();
-    await pause(1000);
     await Promise.all([client.chargePortDoorOpen(), client.actuateTrunk('rear')]);
     await pause(1000);
     await client.flashLights();
   }
 
   if (clickType === doubleClick) {
-    await client.flashLights();
-    await pause(1000);
     await client.doorUnlock();
     await pause(1000);
     await client.flashLights();
@@ -74,14 +70,16 @@ class TeslaClient {
   }
 
   logout() {
-    return post({
+    return authenticatedRequest({
+      method: 'POST',
       path: '/oauth/revoke',
       accessToken: this.accessToken
     });
   }
 
   vehicle() {
-    return get({
+    return authenticatedRequest ({
+      method: 'GET',
       path: `/api/1/vehicles/${this.vehicleId}`,
       accessToken: this.accessToken
     });
@@ -189,33 +187,13 @@ const authenticatedRequest = ({
   });
 };
 
-const get = ({
-  path,
-  accessToken,
-  postData
-}) => authenticatedRequest({
-  method: 'GET',
-  path,
-  accessToken,
-  postData
-});
-const post = ({
-  path,
-  accessToken,
-  postData
-}) => authenticatedRequest({
-  method: 'POST',
-  path,
-  accessToken,
-  postData
-});
-
 const command = ({
   accessToken,
   id,
   command,
   postData
-}) => post({
+}) => authenticatedRequest ({
+  method: 'POST',
   path: `/api/1/vehicles/${id}/command/${command}`,
   accessToken,
   postData
