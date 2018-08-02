@@ -52,9 +52,7 @@ const wakeupVehicle = async client => {
   } while (!awake);
 };
 
-const pause = milliseconds => {
-  new Promise(resolve => setTimeout(resolve, milliseconds))
-};
+pause = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 const createTeslaClient = async (email, password, vehicleId) => {
   const {
@@ -67,68 +65,61 @@ class TeslaClient {
   constructor(accessToken, vehicleId) {
     this.accessToken = accessToken;
     this.vehicleId = vehicleId;
+    this.headers = {
+      Authorization: `Bearer ${accessToken}`,
+      'Content-Type': 'application/json; charset=utf-8'
+    };
+    this.vehicleUriPath = `/api/1/vehicles/${this.vehicleId}`;
   }
 
   logout() {
-    return authenticatedRequest({
+    return teslaRequest({
       method: 'POST',
       path: '/oauth/revoke',
-      accessToken: this.accessToken
+      headers: this.headers
     });
   }
 
   vehicle() {
-    return authenticatedRequest ({
+    return teslaRequest({
       method: 'GET',
-      path: `/api/1/vehicles/${this.vehicleId}`,
-      accessToken: this.accessToken
+      path: this.vehicleUriPath,
+      headers: this.headers
     });
   }
 
   actuateTrunk(which_trunk) {
-    return command({
-      accessToken: this.accessToken,
-      id: this.vehicleId,
-      command: 'actuate_trunk',
-      postData: {
-        which_trunk
-      }
+    return this.command('actuate_trunk', {
+      which_trunk
     });
   }
 
   chargePortDoorOpen() {
-    return command({
-      accessToken: this.accessToken,
-      id: this.vehicleId,
-      command: 'charge_port_door_open'
-    });
+    return this.command('charge_port_door_open');
   }
 
   doorUnlock() {
-    return command({
-      accessToken: this.accessToken,
-      id: this.vehicleId,
-      command: 'door_unlock'
-    });
+    return this.command('door_unlock');
   }
 
   wakeup() {
-    return command({
-      accessToken: this.accessToken,
-      id: this.vehicleId,
-      command: 'wake_up'
-    });
+    return this.command('wake_up');
   }
 
   flashLights() {
-    return command({
+    return this.command('flash_lights');
+  }
+
+  command(commandUri, postData) {
+    return teslaRequest({
+      method: 'POST',
+      path: `${this.vehicleUriPath}/command/${commandUri}`,
       accessToken: this.accessToken,
-      id: this.vehicleId,
-      command: 'flash_lights'
+      postData: JSON.stringify(postData),
+      headers: this.headers
     });
   }
 }
-
 
 const promisedRequest = (options, postData) => {
   return new Promise((resolve, reject) => {
@@ -167,37 +158,6 @@ const teslaRequest = ({
 
   return promisedRequest(options, postData);
 };
-
-const authenticatedRequest = ({
-  method,
-  path,
-  accessToken,
-  postData
-}) => {
-  const headers = {
-    Authorization: `Bearer ${accessToken}`,
-    'Content-Type': 'application/json; charset=utf-8'
-  };
-
-  return teslaRequest({
-    method,
-    path,
-    headers,
-    postData: JSON.stringify(postData)
-  });
-};
-
-const command = ({
-  accessToken,
-  id,
-  command,
-  postData
-}) => authenticatedRequest ({
-  method: 'POST',
-  path: `/api/1/vehicles/${id}/command/${command}`,
-  accessToken,
-  postData
-});
 
 const authenticate = (email, password) => {
   const postData = qs.stringify({
