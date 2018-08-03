@@ -1,0 +1,3 @@
+exclude_patterns:
+  - "__mocks__/"
+  - "*.test.js"
