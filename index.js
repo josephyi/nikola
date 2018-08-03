@@ -23,7 +23,7 @@ exports.handler = async (event, context, callback) => {
 
     await client.logout();
   } catch (error) {
-    console.log(error);
+    callback(error);
   }
 };
 
