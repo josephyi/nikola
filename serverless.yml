@@ -5,6 +5,14 @@ package:
   exclude:
     - .git/**
     - package.json
+    - node_modules/**
+    - "*.test.js"
+    - env.yml
+    - env.yml.template
+    - README.md
+    - yarn.lock
+    - __mocks__/**
+    - .jshintrc
 
 custom:
   stage: ${opt:stage, self:provider.stage}
