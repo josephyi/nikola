@@ -20,7 +20,6 @@ exports.handler = async (event, context, callback) => {
     }
 
     await handleClick(event.clickType, client);
-
     await client.logout();
   } catch (error) {
     callback(error);
@@ -46,13 +45,17 @@ const wakeupVehicle = async client => {
   await pause(10000);
   let awake = false;
   do {
-    await pause(1000);
+      await pause(1000);
+      console.log('waking... car2');
+
     const updatedVehicle = await client.vehicle();
+    console.log(updatedVehicle);
     awake = updatedVehicle.response.state === 'online';
   } while (!awake);
 };
 
-pause = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
+pause = milliseconds => new Promise(resolve => { console.log('set timer');
+  setTimeout(resolve, milliseconds)});
 
 const createTeslaClient = async (email, password, vehicleId) => {
   const {
