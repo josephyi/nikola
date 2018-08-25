@@ -1,7 +1,7 @@
 const https = require('https');
 const qs = require('querystring');
 
-// not privileged and not unique to user, hence hardcoded
+// CLIENT_ID and CLIENT_SECRET are not privileged and don't change often, so it's safe as is for now.
 const CLIENT_ID = '81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384';
 const CLIENT_SECRET = 'c7257eb71a564034f9419ee651c7d0e5f7aa6bfbd18bafb5c5c033b093bb2fa3';
 const GRANT_TYPE = 'password';
@@ -15,7 +15,7 @@ exports.handler = async (event, context, callback) => {
     const client = await createTeslaClient(process.env.USERNAME, process.env.PASSWORD, process.env.VEHICLE_ID);
     const vehicle = await client.vehicle();
 
-    // wake up vehicle
+    // Vehicle needs to be 'online' to accept commands.
     if (vehicle.response.state === 'asleep') {
       await wakeupVehicle(client);
     }
@@ -43,7 +43,7 @@ const handleClick = async (clickType, client) => {
 
 const wakeupVehicle = async client => {
   await client.wakeup();
-  await pause(5000); // give Tesla a little time to awaken
+  await pause(6000); // give Tesla a little time to awaken
   let awake = false;
   do {
     const updatedVehicle = await client.vehicle();
