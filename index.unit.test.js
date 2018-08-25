@@ -31,11 +31,8 @@ test('single click', async () => {
   jest.runAllTimers();
   await flushPromises();
   jest.runAllTimers();
-  await flushPromises();
-  jest.runAllTimers();
-  await flushPromises();
   expect(caughtError).toBeFalsy();
-  expect(setTimeout).toHaveBeenCalledTimes(3);
+  expect(setTimeout).toHaveBeenCalledTimes(2);
 });
 
 test('double click', async () => {
@@ -51,11 +48,8 @@ test('double click', async () => {
   jest.runAllTimers();
   await flushPromises();
   jest.runAllTimers();
-  await flushPromises();
-  jest.runAllTimers();
-  await flushPromises();
   expect(caughtError).toBeFalsy();
-  expect(setTimeout).toHaveBeenCalledTimes(3);
+  expect(setTimeout).toHaveBeenCalledTimes(2);
 });
 
 test('invalid login', async () => {

@@ -1,9 +1,10 @@
 const https = require('https');
 const qs = require('querystring');
 
-const GRANT_TYPE = 'password';
+// not privileged and not unique to user, hence hardcoded
 const CLIENT_ID = '81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384';
 const CLIENT_SECRET = 'c7257eb71a564034f9419ee651c7d0e5f7aa6bfbd18bafb5c5c033b093bb2fa3';
+const GRANT_TYPE = 'password';
 
 const singleClick = 'SINGLE';
 const doubleClick = 'DOUBLE';
@@ -42,20 +43,18 @@ const handleClick = async (clickType, client) => {
 
 const wakeupVehicle = async client => {
   await client.wakeup();
-  await pause(10000);
+  await pause(5000); // give Tesla a little time to awaken
   let awake = false;
   do {
-      await pause(1000);
-      console.log('waking... car2');
-
     const updatedVehicle = await client.vehicle();
-    console.log(updatedVehicle);
     awake = updatedVehicle.response.state === 'online';
+    if(!awake) {
+      await pause(1000);
+    }
   } while (!awake);
 };
 
-pause = milliseconds => new Promise(resolve => { console.log('set timer');
-  setTimeout(resolve, milliseconds)});
+const pause = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 
 const createTeslaClient = async (email, password, vehicleId) => {
   const {
