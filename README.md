@@ -6,7 +6,21 @@ Watch a demo of the charging port and trunk being opened from a single click on 
 * [AWS IoT Button](https://www.amazon.com/dp/B01KW6YCIM)
 * [AWS Account](https://portal.aws.amazon.com/billing/signup)
 * Tesla Account
-* Tesla Vehicle ID (TODO: instructions)
+* Tesla Vehicle ID
+
+## Set us up the button
+
+1. [Set up your IoT Button](https://docs.aws.amazon.com/iot/latest/developerguide/configure-iot.html).
+1. Clone or download repo.
+1. Copy `env.yml.template` to `env.yml`
+  1. Replace `YOUR_DSN_HERE` value with your IoT Button DSN.
+  1. Provide `USERNAME`, `PASSWORD`, and `VEHICLE_ID` (the `id` or `id_s` value from vehicles endpoint reponse) values.
+  1. Configure the click commands as you see fit.
+1. [Install Node](https://nodejs.org/en/download/)
+1. Install Serverless Framework, `npm i -g serverless`
+1. Deploy Lambda, `sls deploy -r aws-region-code`
+1. Go to IoT Button app and change to Lambda.
+1. Click button and show off to friends.
 
 ## Finding Your Vehicle ID
 
@@ -64,20 +78,6 @@ The response will have a key called `response` whose value is an array of vehicl
 }
 ```
 You will need the value from the `id` or `id_s` field to set the `VEHICLE_ID` in the env.yml configuration file. Hint: To tell which vehicle is which, look at the `option_codes` and look for `MDL3`, `MDLS`, or `MDLX` for the Model 3, Model S, and Model X, respectively.
-
-## Set us up the button
-
-1. [Set up your IoT Button](https://docs.aws.amazon.com/iot/latest/developerguide/configure-iot.html).
-1. Clone or download repo.
-1. Copy `env.yml.template` to `env.yml`
-  1. Replace `YOUR_DSN_HERE` value with your IoT Button DSN.
-  1. Provide `USERNAME`, `PASSWORD`, and `VEHICLE_ID` (the `id` or `id_s` value from vehicles endpoint reponse) values.
-  1. Configure the click commands as you see fit.
-1. [Install Node](https://nodejs.org/en/download/)
-1. Install Serverless Framework, `npm i -g serverless`
-1. Deploy Lambda, `sls deploy -r aws-region-code`
-1. Go to IoT Button app and change to Lambda.
-1. Click button and show off to friends.
 
 ## Design Philosophy (or lack thereof)
 I took the approach of less is more:
