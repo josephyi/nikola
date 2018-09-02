@@ -6,10 +6,6 @@ const CLIENT_ID = '81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796
 const CLIENT_SECRET = 'c7257eb71a564034f9419ee651c7d0e5f7aa6bfbd18bafb5c5c033b093bb2fa3';
 const GRANT_TYPE = 'password';
 
-const singleClick = 'SINGLE';
-const doubleClick = 'DOUBLE';
-const longClick = 'LONG';
-
 exports.handler = async (event, context, callback) => {
   try {
     const client = await createTeslaClient(process.env.USERNAME, process.env.PASSWORD, process.env.VEHICLE_ID);
@@ -28,18 +24,26 @@ exports.handler = async (event, context, callback) => {
 };
 
 const handleClick = async (clickType, client) => {
-  if (clickType === singleClick) {
-    await Promise.all([client.chargePortDoorOpen(), client.actuateTrunk('rear')]);
-    await pause(1000);
-    await client.flashLights();
-  }
-
-  if (clickType === doubleClick) {
-    await client.doorUnlock();
-    await pause(1000);
-    await client.flashLights();
-  }
+  const commands = {
+    SINGLE: process.env.SINGLE_CLICK,
+    DOUBLE: process.env.DOUBLE_CLICK,
+    LONG: process.env.LONG_CLICK
+  }[clickType];
+  await runCommands(client, commands);
 };
+
+const runCommands = async (client, commands) => {
+  commands.split(',').forEach(async element => {
+    const number = Number(element);
+    if(isNaN(number)) {
+      await Promise.all(element.split('&').map(concurrent => {
+        COMMANDS[concurrent].apply(client);
+      }));
+    } else {
+      await pause(number);
+    }
+  });
+}
 
 const wakeupVehicle = async client => {
   await client.wakeup();
@@ -69,7 +73,8 @@ class TeslaClient {
     this.vehicleId = vehicleId;
     this.headers = {
       Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json; charset=utf-8'
+      'Content-Type': 'application/json; charset=utf-8',
+      'user-agent': 'nikola-dash-button'
     };
     this.vehicleUriPath = `/api/1/vehicles/${this.vehicleId}`;
   }
@@ -94,6 +99,10 @@ class TeslaClient {
     return this.command('actuate_trunk', {
       which_trunk
     });
+  }
+
+  openTrunk() {
+    return this.actuateTrunk('rear');
   }
 
   chargePortDoorOpen() {
@@ -122,6 +131,13 @@ class TeslaClient {
     });
   }
 }
+
+const COMMANDS = {
+  OpenTrunk: TeslaClient.prototype.openTrunk,
+  OpenChargingPort: TeslaClient.prototype.chargePortDoorOpen,
+  FlashLights: TeslaClient.prototype.flashLights,
+  UnlockDoors: TeslaClient.prototype.doorUnlock
+};
 
 const promisedRequest = (options, postData) => {
   return new Promise((resolve, reject) => {
@@ -171,7 +187,8 @@ const authenticate = (email, password) => {
   });
   const headers = {
     'Content-Type': 'application/x-www-form-urlencoded',
-    'Content-Length': postData.length
+    'Content-Length': postData.length,
+    'user-agent': 'nikola-dash-button'
   };
 
   return teslaRequest({
