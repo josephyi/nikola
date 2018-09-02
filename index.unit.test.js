@@ -22,6 +22,7 @@ test('single click', async () => {
   process.env.USERNAME = 'test';
   process.env.PASSWORD = 'test';
   process.env.VEHICLE_ID = 'abc';
+  process.env.SINGLE_CLICK = 'OpenChargingPort&OpenTrunk,1000,FlashLights';
   let caughtError;
   handler({
     clickType: 'SINGLE'
@@ -39,6 +40,7 @@ test('double click', async () => {
   process.env.USERNAME = 'test';
   process.env.PASSWORD = 'test';
   process.env.VEHICLE_ID = 'abc';
+  process.env.DOUBLE_CLICK = 'UnlockDoors,1000,FlashLights';
   let caughtError;
   handler({
     clickType: 'DOUBLE'
