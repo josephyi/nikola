@@ -113,12 +113,20 @@ class TeslaClient {
     return this.command('door_unlock');
   }
 
+  honkHorn() {
+    return this.command('honk_horn');
+  }
+
   wakeup() {
     return this.command('wake_up');
   }
 
   flashLights() {
     return this.command('flash_lights');
+  }
+
+  autoConditioningStart() {
+    return this.command('auto_conditioning_start');
   }
 
   command(commandUri, postData) {
@@ -133,9 +141,11 @@ class TeslaClient {
 }
 
 const COMMANDS = {
+  AutoConditioningStart: TeslaClient.prototype.autoConditioningStart,
   OpenTrunk: TeslaClient.prototype.openTrunk,
   OpenChargingPort: TeslaClient.prototype.chargePortDoorOpen,
   FlashLights: TeslaClient.prototype.flashLights,
+  HonkHorn: TeslaClient.prototype.honkHorn,
   UnlockDoors: TeslaClient.prototype.doorUnlock
 };
 

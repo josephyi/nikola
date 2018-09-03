@@ -40,7 +40,7 @@ test('double click', async () => {
   process.env.USERNAME = 'test';
   process.env.PASSWORD = 'test';
   process.env.VEHICLE_ID = 'abc';
-  process.env.DOUBLE_CLICK = 'UnlockDoors,1000,FlashLights';
+  process.env.DOUBLE_CLICK = 'UnlockDoors,1000,FlashLights,HonkHorn,AutoConditioningStart';
   let caughtError;
   handler({
     clickType: 'DOUBLE'
