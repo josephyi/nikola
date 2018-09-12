@@ -32,7 +32,7 @@ curl -X POST \
     -d 'grant_type=password' \
     -d 'client_id=81527cff06843c8634fdc09e8ac0abefb46ac849f38fe1e431c2ef2106796384' \
     -d 'client_secret=c7257eb71a564034f9419ee651c7d0e5f7aa6bfbd18bafb5c5c033b093bb2fa3' \
-    -d 'email=YOUR_TESLA_LOGIN_EMAIL@password=YOUR_TESLA_LOGIN_PASSWORD'
+    -d 'email=YOUR_TESLA_LOGIN_EMAIL&password=YOUR_TESLA_LOGIN_PASSWORD'
 ```
 A successful response looks something like this.
 
