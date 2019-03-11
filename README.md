@@ -8,7 +8,7 @@ Watch a demo of the charging port and trunk being opened from a single click on 
 * Tesla Account
 * Tesla Vehicle ID
 
-## Set us up the button
+## Set up the button
 
 1. [Set up your IoT Button](https://docs.aws.amazon.com/iot/latest/developerguide/configure-iot.html).
 1. Clone or download repo.
