@@ -109,6 +109,10 @@ class TeslaClient {
     return this.command('charge_port_door_open');
   }
 
+  doorLock() {
+    return this.command('door_lock');
+  }
+
   doorUnlock() {
     return this.command('door_unlock');
   }
@@ -146,6 +150,7 @@ const COMMANDS = {
   OpenChargingPort: TeslaClient.prototype.chargePortDoorOpen,
   FlashLights: TeslaClient.prototype.flashLights,
   HonkHorn: TeslaClient.prototype.honkHorn,
+  LockDoors: TeslaClient.prototype.doorLock,
   UnlockDoors: TeslaClient.prototype.doorUnlock
 };
 
