@@ -1,10 +1,10 @@
 language: node_js
 
 node_js:
-  - 8.10.0
+  - 10.16.3
 dist: trusty
 before_script:
-  - yarn
+  - npm i
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
