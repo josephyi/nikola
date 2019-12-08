@@ -1,3 +1,7 @@
+if (process.env.AWS_XRAY === 'true') {
+  const AWSXRay = require('aws-xray-sdk');
+  AWSXRay.captureHTTPsGlobal(require('https'), false);
+}
 const https = require('https');
 const qs = require('querystring');
 
