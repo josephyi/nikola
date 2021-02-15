@@ -1,3 +1,5 @@
+org: josephyi
+app: nikola
 service: nikola
 
 frameworkVersion: ">=1.4.0 <2.0.0"
@@ -5,7 +7,6 @@ package:
   exclude:
     - .git/**
     - package.json
-    - node_modules/**
     - "*.test.js"
     - env.yml
     - env.yml.template
@@ -20,7 +21,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs10.x
+  runtime: nodejs12.x
   region: ${self:custom.region}
   memorySize: 128
   timeout: 60
@@ -29,6 +30,8 @@ provider:
       Action:
         - iot:*
       Resource: "*"
+  tracing:
+    lambda: ${file(env.yml):${self:custom.stage}.tracing}
 
 functions:
   nikola:
